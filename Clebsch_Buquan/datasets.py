@@ -1,6 +1,10 @@
 import os
 import numpy as np
 import torch.utils.data as data
+import torch
+# import torch.utils.data as data
+from torch.utils.data import DataLoader
+
 
 class NpyDataset(data.Dataset):
     def __init__(self, velocity_dir, abcd_dir=None, transform=None, mask_ratio=0.2):
