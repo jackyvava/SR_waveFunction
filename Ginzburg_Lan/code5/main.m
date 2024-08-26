@@ -11,7 +11,7 @@ nz = nx;
 vol_size = {lx,ly,lz};   % box size
 vol_res = {nx,ny,nz}; % volume resolution
 hbar = 0.1;            % Planck constant
-Npsi = 10;
+Npsi = 2;
 clebsch = Clebsch(vol_size{:},vol_res{:},hbar,Npsi);
 px = clebsch.px;
 py = clebsch.py;
@@ -70,12 +70,15 @@ for iter = 1:nstep
         varname = ['x','y','z','u','v','w','s','o','r','vx','vy','vz','vx_pre','vy_pre','vz_pre','err_x','err_y','err_z'];
         writedate = output(vbox,nx,ny,nz,nbox,name,varname);
     end
+    
     % 更新 vx_pre 等变量
     [vx_pre, vy_pre, vz_pre] = clebsch.VelocityOneForm(psi);
 
     [Deviation] = clebsch.CalDeviation(vx,vy,vz,psi);
     nsteps(iter) = iter;
     deviation(iter) = Deviation;
+
+
     disp('=============')
     disp(['迭代次数', num2str(iter), '的Deviation：',num2str(Deviation)]);
     %Deviation

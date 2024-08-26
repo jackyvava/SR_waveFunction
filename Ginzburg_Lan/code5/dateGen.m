@@ -1,5 +1,5 @@
 % 生成数据
-nstep = 1000;  % 少量数据用于初始训练
+nstep = 100;  % 少量数据用于初始训练
 vx_data = zeros(nx, ny, nz, nstep);
 vy_data = zeros(nx, ny, nz, nstep);
 vz_data = zeros(nx, ny, nz, nstep);
