@@ -48,11 +48,8 @@ classdef Clebsch < handle
 
         function [vx,vy,vz] = TGVelocityOneForm(obj)
             %%% initial TG flow
-            qx = obj.px + 0.5*obj.dx;
-            qy = obj.py + 0.5*obj.dy;
-            qz = obj.pz + 0.5*obj.dz;
-            vx = obj.dx*sin(qx).* cos(qy) .* cos(qz);
-            vy = -obj.dx*cos(qx).* sin(qy) .* cos(qz);
+            vx = obj.dx*sin(obj.px + 0.5*obj.dx).* cos(obj.py) .* cos(obj.pz);
+            vy = -obj.dx*cos(obj.px).* sin(obj.py + 0.5*obj.dy) .* cos(obj.pz);
             vz = 0*vx;
         end
 
@@ -72,9 +69,8 @@ classdef Clebsch < handle
             for i = 1:obj.Npsi
                 psi_norm = psi_norm+psi(:,:,:,i).*conj(psi(:,:,:,i));
             end
-            psi_norm = sqrt(psi_norm);
             for i = 1:obj.Npsi
-                psi(:,:,:,i) = psi(:,:,:,i)./psi_norm;
+                psi(:,:,:,i) = psi(:,:,:,i)./sqrt(psi_norm);
             end
         end
 
@@ -271,6 +267,23 @@ classdef Clebsch < handle
             ux = ux * obj.hbar;
             uy = uy * obj.hbar;
             uz = uz * obj.hbar;
+        end
+
+        function [vx,vy,vz] = VelocityOneForm(obj,psi)
+            ixp = mod(obj.ix,obj.resx) + 1;
+            iyp = mod(obj.iy,obj.resy) + 1;
+            izp = mod(obj.iz,obj.resz) + 1;
+            thetax = zeros(obj.resx,obj.resy,obj.resz);
+            thetay = zeros(obj.resx,obj.resy,obj.resz);
+            thetaz = zeros(obj.resx,obj.resy,obj.resz);
+            for ii = 1:obj.Npsi
+                thetax = thetax + conj(psi(:,:,:,ii)).*psi(ixp,:,:,ii);
+                thetay = thetay + conj(psi(:,:,:,ii)).*psi(:,iyp,:,ii);
+                thetaz = thetaz + conj(psi(:,:,:,ii)).*psi(:,:,izp,ii);
+            end
+            vx = obj.hbar*angle(thetax);
+            vy = obj.hbar*angle(thetay);
+            vz = obj.hbar*angle(thetaz);
         end
 
     end
