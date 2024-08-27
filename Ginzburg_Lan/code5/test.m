@@ -11,7 +11,7 @@ nz = nx;
 vol_size = {lx, ly, lz};   % box size
 vol_res = {nx, ny, nz};    % volume resolution
 hbar = 0.1;                % Planck constant
-Npsi = 4;
+Npsi = 2;
 clebsch = Clebsch(vol_size{:}, vol_res{:}, hbar, Npsi);
 px = clebsch.px;
 py = clebsch.py;
@@ -105,7 +105,7 @@ for iter = 1:nstep
 end
 
 %% 保存训练数据到 .mat 文件
-save('training_data.mat', '-struct', 'training_data', '-v7.3');
+save('training_data_2.mat', '-struct', 'training_data', '-v7.3');
 disp('Training data saved to training_data.mat');
 
 %% 输出文件
