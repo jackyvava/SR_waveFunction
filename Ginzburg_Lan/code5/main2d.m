@@ -1,0 +1,129 @@
+clear;
+clc;
+%% PARAMETERS
+tic;  % 开始计时
+lx = 2*pi;
+ly = 2*pi;
+nx = 512;
+ny = nx;
+vol_size = {lx, ly};   % box size
+vol_res = {nx, ny};    % volume resolution
+hbar = 0.1;            % Planck constant
+Npsi = 2;
+clebsch = Clebsch2d(vol_size{:}, vol_res{:}, hbar, Npsi);
+px = clebsch.px;
+py = clebsch.py;
+dx = clebsch.dx;
+dy = clebsch.dy;
+
+[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡
+
+% [vx, vy] = clebsch.RotationalFlow(); % TG涡+noise
+
+[wx, wy] = clebsch.DerivativeOfOneForm(vx, vy); % 速度场导数
+wx = wx / dy;
+wy = wy / dx;
+
+%% initial wave function
+psi = zeros(nx, ny, Npsi);
+for ii = 1:clebsch.Npsi
+    psi(:, :, ii) = sin(ii * (clebsch.px + clebsch.py)) + 1i * cos(ii * (clebsch.px + clebsch.py));
+end
+psi = clebsch.Normalize(psi); % 归一化
+nstep = 5001;
+nsteps = zeros(1, nstep);
+deviation = zeros(1, nstep);
+
+%% Initialize velocity fields before the loop
+vx_pre = zeros(nx, ny);
+vy_pre = zeros(nx, ny);
+
+%% 迭代求解
+output_step = 500;
+for iter = 1:nstep
+    % if (mod(iter, output_step) == 1)
+    %     nbox = 10;
+    %     vbox = zeros(nx, ny, nbox);
+    %     vbox(:, :, 1) = px;
+    %     vbox(:, :, 2) = py;
+    %     vbox(:, :, 3) = wx;
+    %     vbox(:, :, 4) = wy;
+    %     vbox(:, :, 5) = real(psi(:, :, 1));
+    %     vbox(:, :, 6) = imag(psi(:, :, 1));
+    %     vbox(:, :, 7) = real(psi(:, :, 2));
+    %     vbox(:, :, 8) = vx;
+    %     vbox(:, :, 9) = vy;
+    %     vbox(:, :, 10) = vx_pre;
+    % 
+    %     name = ['TG_', num2str(nx), '_', num2str(iter), '_1', '.bin'];
+    %     varname = {'x', 'y', 'u', 'v', 's', 'o', 'r', 'vx', 'vy', 'vx_pre'};
+    %     writedate = output(vbox, nx, ny, nbox, name, varname);
+    % end
+    
+    % 更新 vx_pre 和 vy_pre 变量
+    [vx_pre, vy_pre] = clebsch.VelocityOneForm(psi);
+
+    % 计算偏差
+    Deviation = clebsch.CalDeviation(vx, vy, psi);
+    nsteps(iter) = iter;
+    deviation(iter) = Deviation;
+
+    disp(['=============', 'Iteration ', num2str(iter), ' Deviation: ', num2str(Deviation), '=============']);
+    
+    % 更新 psi
+    psi = clebsch.VelocityOneForm2Psi(vx, vy, psi);
+end
+
+%% output文件
+loglog(nsteps, deviation);
+[fid, message] = fopen('deviation.dat', 'wb+');
+for step = 1:nstep
+    fprintf(fid, '%f %f \n', nsteps(step), deviation(step));
+end
+fclose(fid);
+
+%% Time
+elapsedTime = toc;  % 结束计时，并返回时间
+disp(['运行时间: ', num2str(elapsedTime), ' 秒']);
+
+%% 波函数转速度场场，并对比误差
+[vx_pre, vy_pre] = clebsch.VelocityOneForm(psi);
+error = sum(sum((vx - vx_pre).^2 + (vy - vy_pre).^2));
+relative_error = error / sum(sum(vx.^2 + vy.^2));
+disp(['相对误差: ', num2str(relative_error)]);
+
+
+
+
+
+%%
+%      保存数据集
+
+
+%% 保存数据集
+
+% 指定数据存储路径
+data_dir = 'D:\zjPhD\Programzj\psiToU\Ginzburg_Lan\Clebsch_flowfield\data\High_Resolution\';
+
+% 检查路径是否存在，不存在则创建
+if ~exist(data_dir, 'dir')
+    mkdir(data_dir);
+end
+
+% 保存速度场数据 u_x 和 u_y 到 MAT 文件
+ux = vx;
+uy = vy;
+save([data_dir 'velocity_field.mat'], 'ux', 'uy');
+
+% 保存波函数 psi_1 和 psi_2 到 MAT 文件
+psi1 = real(psi(:, :, 1)) + 1i * imag(psi(:, :, 1));
+psi2 = real(psi(:, :, 2)) + 1i * imag(psi(:, :, 2));
+save([data_dir 'wave_function.mat'], 'psi1', 'psi2');
+
+% 计算并保存误差场 v_x 和 v_y 到 MAT 文件
+vx_error = vx - vx_pre;
+vy_error = vy - vy_pre;
+save([data_dir 'error_field.mat'], 'vx_error', 'vy_error');
+
+% 输出文件保存完成信息
+disp(['数据已成功保存为MAT格式到文件夹: ' data_dir]);
