@@ -2893,3 +2893,6 @@ Ginzburg_Lan/code5/training_data_2.mat
 Ginzburg_Lan/Clebsch_flowfield/data/High_Resolution/train/error_field.mat
 Ginzburg_Lan/Clebsch_flowfield/data/High_Resolution/train/velocity_field.mat
 Ginzburg_Lan/Clebsch_flowfield/data/High_Resolution/train/wave_function.mat
+Ginzburg_Lan/Clebsch_flowfield/SchrodingerNet.pt
+Ginzburg_Lan/Clebsch_flowfield/data_psi.h5
+Ginzburg_Lan/Clebsch_flowfield/datat.h5
