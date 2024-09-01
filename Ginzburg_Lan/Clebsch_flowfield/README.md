@@ -58,30 +58,56 @@
 
 # 代码
 
-
-
 ## Dataset Preparation
 
  the data tree like this
 
 ```
-data/High_Resolution
-├── train
-│      └── velocity_field.mat
-│      │
-│      ├──wave_function.mat
-│      │
-│      ├──error_field.mat
-├── test      
-	   └── ...
-	   
-       
+data/
+│
+├── High_Resolution/
+│   ├── train/
+│   │   ├── velocity_field_001.mat
+│   │   ├── wave_function_001.mat
+│   │   ├── error_field_001.mat
+│   │   ├── velocity_field_002.mat
+│   │   ├── wave_function_002.mat
+│   │   ├── error_field_002.mat
+│   │   └── ...
+│   ├── validation/
+│   │   ├── velocity_field_001.mat
+│   │   ├── wave_function_001.mat
+│   │   ├── error_field_001.mat
+│   │   └── ...
+│   └── test/
+│       ├── velocity_field_001.mat
+│       ├── wave_function_001.mat
+│       ├── error_field_001.mat
+│       └── ...
+└── Low_Resolution/
+    ├── train/
+    │   ├── velocity_field_001.mat
+    │   ├── wave_function_001.mat
+    │   ├── error_field_001.mat
+    │   └── ...
+    ├── validation/
+    │   ├── velocity_field_001.mat
+    │   ├── wave_function_001.mat
+    │   ├── error_field_001.mat
+    │   └── ...
+    └── test/
+        ├── velocity_field_001.mat
+        ├── wave_function_001.mat
+        ├── error_field_001.mat
+        └── ...
 
 ```
 
 
 
+`High_Resolution`中存放高分辨率的数据，分辨率为$512\times512$。
 
+## model.ipynb
 
 
 

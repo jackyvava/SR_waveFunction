@@ -52,12 +52,11 @@ classdef Clebsch2d < handle
             vy = -obj.dx * cos(obj.px) .* sin(obj.py + 0.5 * obj.dy) + noise_level * randn(size(obj.py));
         end
 %%      简单的旋转流场
-        function [vx, vy] = RotationalFlow(obj)
-            %%% Rotational flow in 2D
-            radius = sqrt(obj.px.^2 + obj.py.^2);  % 计算到中心的距离
-            vx = -obj.py ./ (radius + eps);  % eps 是一个非常小的值，用于避免除以零
-            vy = obj.px ./ (radius + eps);
-            
+        function [vx, vy] = DoubleVortexFlow(obj)
+            % Double Vortex Flow in 2D
+            vx = obj.dx * cos(obj.px + 0.5 * obj.dx) .* cos(obj.py);
+            vy = -obj.dx * cos(obj.px) .* sin(obj.py + 0.5 * obj.dy);
+        
         end
 %% 计算梯度
         function [wx, wy] = DerivativeOfOneForm(obj, vx, vy)
