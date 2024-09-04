@@ -16,9 +16,9 @@ py = clebsch.py;
 dx = clebsch.dx;
 dy = clebsch.dy;
 
-%[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡
+[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡
 
-[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡+noise
+%[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡+noise
 
 [wx, wy] = clebsch.DerivativeOfOneForm(vx, vy); % 速度场导数
 wx = wx / dy;
