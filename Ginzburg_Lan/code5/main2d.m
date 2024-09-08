@@ -15,28 +15,29 @@ px = clebsch.px;
 py = clebsch.py;
 dx = clebsch.dx;
 dy = clebsch.dy;
+noise = 0.0001;
 
-[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡
+%[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡
 
-%[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡+noise
+[vx00001, vy00001] = clebsch.TGVelocityOneForm_noise(noise); % TG涡+noise
 
-[wx, wy] = clebsch.DerivativeOfOneForm(vx, vy); % 速度场导数
+[wx, wy] = clebsch.DerivativeOfOneForm(vx00001, vy00001); % 速度场导数
 wx = wx / dy;
 wy = wy / dx;
 
 %% initial wave function
-psi = zeros(nx, ny, Npsi);
+psi00001 = zeros(nx, ny, Npsi);
 for ii = 1:clebsch.Npsi
-    psi(:, :, ii) = sin(ii * (clebsch.px + clebsch.py)) + 1i * cos(ii * (clebsch.px + clebsch.py));
+    psi00001(:, :, ii) = sin(ii * (clebsch.px + clebsch.py)) + 1i * cos(ii * (clebsch.px + clebsch.py));
 end
-psi = clebsch.Normalize(psi); % 归一化
+psi00001 = clebsch.Normalize(psi00001); % 归一化
 nstep = 5001;
 nsteps = zeros(1, nstep);
 deviation = zeros(1, nstep);
 
 %% Initialize velocity fields before the loop
-vx_pre = zeros(nx, ny);
-vy_pre = zeros(nx, ny);
+vx_pre00001 = zeros(nx, ny);
+vy_pre00001 = zeros(nx, ny);
 
 %% 迭代求解
 output_step = 500;
@@ -61,17 +62,17 @@ for iter = 1:nstep
     % end
     
     % 更新 vx_pre 和 vy_pre 变量
-    [vx_pre, vy_pre] = clebsch.VelocityOneForm(psi);
+    [vx_pre00001, vy_pre00001] = clebsch.VelocityOneForm(psi00001);
 
     % 计算偏差
-    Deviation = clebsch.CalDeviation(vx, vy, psi);
+    Deviation = clebsch.CalDeviation(vx00001, vy00001, psi00001);
     nsteps(iter) = iter;
     deviation(iter) = Deviation;
 
     disp(['=============', 'Iteration ', num2str(iter), ' Deviation: ', num2str(Deviation), '=============']);
     
     % 更新 psi
-    psi = clebsch.VelocityOneForm2Psi(vx, vy, psi);
+    psi00001 = clebsch.VelocityOneForm2Psi(vx00001, vy00001, psi00001);
 end
 
 %% output文件
@@ -87,17 +88,11 @@ elapsedTime = toc;  % 结束计时，并返回时间
 disp(['运行时间: ', num2str(elapsedTime), ' 秒']);
 
 %% 波函数转速度场场，并对比误差
-[vx_pre, vy_pre] = clebsch.VelocityOneForm(psi);
-error = sum(sum((vx - vx_pre).^2 + (vy - vy_pre).^2));
-relative_error = error / sum(sum(vx.^2 + vy.^2));
+[vx_pre00001, vy_pre00001] = clebsch.VelocityOneForm(psi00001);
+error = sum(sum((vx00001 - vx_pre00001).^2 + (vy00001 - vy_pre00001).^2));
+relative_error = error / sum(sum(vx00001.^2 + vy00001.^2));
 disp(['相对误差: ', num2str(relative_error)]);
 
-
-
-
-
-%%
-%      保存数据集
 
 
 %% 保存数据集
@@ -111,19 +106,27 @@ if ~exist(data_dir, 'dir')
 end
 
 % 保存速度场数据 u_x 和 u_y 到 MAT 文件
-ux = vx;
-uy = vy;
+ux = vx00001;
+uy = vy00001;
 save([data_dir 'velocity_field.mat'], 'ux', 'uy');
 
 % 保存波函数 psi_1 和 psi_2 到 MAT 文件
-psi1 = real(psi(:, :, 1)) + 1i * imag(psi(:, :, 1));
-psi2 = real(psi(:, :, 2)) + 1i * imag(psi(:, :, 2));
+psi1 = real(psi00001(:, :, 1)) + 1i * imag(psi00001(:, :, 1));
+psi2 = real(psi00001(:, :, 2)) + 1i * imag(psi00001(:, :, 2));
 save([data_dir 'wave_function.mat'], 'psi1', 'psi2');
 
 % 计算并保存误差场 v_x 和 v_y 到 MAT 文件
-vx_error = vx - vx_pre;
-vy_error = vy - vy_pre;
+vx_error = vx00001 - vx_pre00001;
+vy_error = vy00001 - vy_pre00001;
 save([data_dir 'error_field.mat'], 'vx_error', 'vy_error');
 
 % 输出文件保存完成信息
 disp(['数据已成功保存为MAT格式到文件夹: ' data_dir]);
+
+psi1_real_part_00001 = real(psi1);  % 实部
+psi1_imag_part_00001 = imag(psi1);  % 虚部
+
+psi2_real_part_00001 = real(psi2);  % 实部
+psi2_imag_part_00001 = imag(psi2);  % 虚部
+
+save('data00001.mat','vx00001', 'vx_pre00001','vy00001','vy_pre00001','psi00001','psi1_real_part_00001','psi1_imag_part_00001','psi2_real_part_00001',"psi2_imag_part_00001")

@@ -9,7 +9,8 @@ classdef Clebsch2d < handle
         sizex, sizey    % size of grid
         resx, resy      % number of grid points in each dimension
         Npsi,
-        kx, ky
+        kx, ky,
+        noise
     end
 
     methods % Constructor
@@ -45,9 +46,9 @@ classdef Clebsch2d < handle
             vy = -obj.dx * cos(obj.px) .* sin(obj.py + 0.5 * obj.dy);
         end
 %%      TG涡增加noise
-        function [vx, vy] = TGVelocityOneForm_noise(obj)
+function [vx, vy] = TGVelocityOneForm_noise(obj, noise)
             %%% initial TG flow in 2D with random noise
-            noise_level = 0.1; % 设置噪声水平，可以根据需要调整
+            noise_level = noise; % 设置噪声水平，可以根据需要调整
             vx = obj.dx * sin(obj.px + 0.5 * obj.dx) .* cos(obj.py) + noise_level * randn(size(obj.px));
             vy = -obj.dx * cos(obj.px) .* sin(obj.py + 0.5 * obj.dy) + noise_level * randn(size(obj.py));
         end
