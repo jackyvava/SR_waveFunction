@@ -165,3 +165,5 @@ xlim([min(std_dev), max(std_dev)]);
 % 保存图像为PNG文件
 saveas(gcf, 'running_time_vs_error_chinese_2.png');
 
+
+
