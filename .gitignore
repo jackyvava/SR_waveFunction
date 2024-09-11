@@ -2939,3 +2939,5 @@ Ginzburg_Lan/code5/data00500.mat
 Ginzburg_Lan/code5/data01000.mat
 Ginzburg_Lan/code5/output_9_9.asv
 result/8_1/low/omega_pre_64.png
+Ginzburg_Lan/code5/PSNR_SSIM_vs_Noise_with_labels_11.png
+Ginzburg_Lan/code5/SSIM_vs_Runtime_11.png

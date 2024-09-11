@@ -177,7 +177,7 @@ ssim_vx_pre = [vx_pre_SSIM_1,vx_pre_SSIM_2, vx_pre_SSIM_3,vx_pre_SSIM_4,vx_pre_S
 ssim_vy_pre = [vy_pre_SSIM_1,vy_pre_SSIM_2, vy_pre_SSIM_3,vy_pre_SSIM_4,vy_pre_SSIM_5, vy_pre_SSIM_6];
 
 
-run_time = [1,2,3,4,5,6];
+run_time = [0,0.0001,0.001,0.01,0.05,0.1];
 
 % 绘图
 figure;
@@ -188,7 +188,7 @@ plot(run_time, ssim_vx, '-o', 'LineWidth', 1.5, 'MarkerSize', 8, 'DisplayName', 
 hold on;
 plot(run_time, ssim_vx_pre, '-d', 'LineWidth', 1.5, 'MarkerSize', 8, 'DisplayName', 'SSIM vx pre', 'Color', [0.8500, 0.3250, 0.0980]);  % 红色线
 legend('show', 'Location', 'northeast', 'FontSize', 10);  % 图例放在右上角，字体大小为10
-xlabel('Runtime', 'FontSize', 12, 'FontWeight', 'bold');  % X轴标签
+xlabel('Noise', 'FontSize', 12, 'FontWeight', 'bold');  % X轴标签
 ylabel('SSIM', 'FontSize', 12, 'FontWeight', 'bold');    % Y轴标签
 title('SSIM vs Runtime for vx', 'FontSize', 14, 'FontWeight', 'bold');  % 标题
 grid on;
@@ -200,7 +200,7 @@ plot(run_time, ssim_vy, '-s', 'LineWidth', 1.5, 'MarkerSize', 8, 'DisplayName', 
 hold on;
 plot(run_time, ssim_vy_pre, '-x', 'LineWidth', 1.5, 'MarkerSize', 8, 'DisplayName', 'SSIM vy pre', 'Color', [0.9290, 0.6940, 0.1250]);  % 黄色线
 legend('show', 'Location', 'northeast', 'FontSize', 10);  % 图例放在右上角，字体大小为10
-xlabel('Runtime', 'FontSize', 12, 'FontWeight', 'bold');  % X轴标签
+xlabel('Noise', 'FontSize', 12, 'FontWeight', 'bold');  % X轴标签
 ylabel('SSIM', 'FontSize', 12, 'FontWeight', 'bold');    % Y轴标签
 title('SSIM vs Runtime for vy', 'FontSize', 14, 'FontWeight', 'bold');  % 标题
 grid on;
@@ -210,7 +210,7 @@ set(gca, 'FontSize', 12);  % 设置轴字体大小
 set(gcf, 'Position', [100, 100, 600, 600]);  % 设置图形大小
 
 % 保存为高分辨率的PNG或EPS格式，用于论文插图
-saveas(gcf, 'SSIM_vs_Runtime.png');
+saveas(gcf, 'SSIM_vs_Runtime_11.png');
 
 
 
@@ -314,6 +314,6 @@ text(0.9, 0.95, '(d)', 'Units', 'normalized', 'FontSize', 14, 'FontWeight', 'bol
 set(gcf, 'Position', [100, 100, 800, 600]);  % 设置图形大小为800x600像素
 
 % 保存为高分辨率的PNG或EPS格式，用于论文插图
-saveas(gcf, 'PSNR_SSIM_vs_Noise_with_labels.png');
+saveas(gcf, 'PSNR_SSIM_vs_Noise_with_labels_11.png');
 
 %%
