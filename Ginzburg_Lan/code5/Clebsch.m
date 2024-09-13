@@ -48,9 +48,15 @@ classdef Clebsch < handle
 
         function [vx,vy,vz] = TGVelocityOneForm(obj)
             %%% initial TG flow
-            vx = obj.dx*sin(obj.px + 0.5*obj.dx).* cos(obj.py) .* cos(obj.pz);
-            vy = -obj.dx*cos(obj.px).* sin(obj.py + 0.5*obj.dy) .* cos(obj.pz);
-            vz = 0*vx;
+            load("uu_reshaped.mat");
+            load("vv_reshaped.mat");
+            load("ww_reshaped.mat");
+            % vx = obj.dx*sin(obj.px + 0.5*obj.dx).* cos(obj.py) .* cos(obj.pz);
+            % vy = -obj.dx*cos(obj.px).* sin(obj.py + 0.5*obj.dy) .* cos(obj.pz);
+            % vz = 0*vx;
+            vx = uu_reshaped;
+            vy = vv_reshaped;
+            vz = ww_reshaped;
         end
 
         function [wx,wy,wz] = DerivativeOfOneForm(obj,vx,vy,vz)

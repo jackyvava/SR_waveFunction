@@ -25,8 +25,6 @@ noise = 0.0;
 vx00001(100:163, 100:163) = 0;
 vy00001(100:163, 100:163) = 0;
 
-
-
 [wx, wy] = clebsch.DerivativeOfOneForm(vx00001, vy00001); % 速度场导数
 wx = wx / dy;
 wy = wy / dx;

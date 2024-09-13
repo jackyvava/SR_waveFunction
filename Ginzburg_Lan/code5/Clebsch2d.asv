@@ -75,12 +75,12 @@ function [vx, vy] = TGVelocityOneForm_noise(obj, noise)
         end
  %%     
         function [vx, vy] = RandomVortexFlow(obj)
-         % 生成随机的速度场
-         % vx 和 vy 的大小与 px 和 py 相同，均匀分布在 [0, 1] 之间
+    % 生成随机的速度场
+    % vx 和 vy 的大小与 px 和 py 相同，均匀分布在 [0, 1] 之间
     
-            vx = rand(size(obj.px));  % 生成 [0, 1] 之间的随机速度场 vx
-            vy = rand(size(obj.py));  % 生成 [0, 1] 之间的随机速度场 vy
-        end
+    vx = rand(size(obj.px));  % 生成 [0, 1] 之间的随机速度场 vx
+    vy = rand(size(obj.py));  % 生成 [0, 1] 之间的随机速度场 vy
+end
 
 
 

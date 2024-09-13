@@ -4,7 +4,7 @@ clc;
 tic;  % 开始计时
 lx = 2*pi;
 ly = 2*pi;
-nx = 512;
+nx = 41;
 ny = nx;
 vol_size = {lx, ly};   % box size
 vol_res = {nx, ny};    % volume resolution
@@ -15,11 +15,14 @@ px = clebsch.px;
 py = clebsch.py;
 dx = clebsch.dx;
 dy = clebsch.dy;
-noise = 0.0001;
+noise = 0.0000;
 
 %[vx, vy] = clebsch.TGVelocityOneForm(); % TG涡
 
-[vx00001, vy00001] = clebsch.TGVelocityOneForm_noise(noise); % TG涡+noise
+%[vx00001, vy00001] = clebsch.TGVelocityOneForm_noise(noise); % TG涡+noise
+
+[vx00001, vy00001] = clebsch.DealtWing();
+% [vx00001, vy00001] =clebsch.RandomVortexFlow;
 
 [wx, wy] = clebsch.DerivativeOfOneForm(vx00001, vy00001); % 速度场导数
 wx = wx / dy;
@@ -28,7 +31,10 @@ wy = wy / dx;
 %% initial wave function
 psi00001 = zeros(nx, ny, Npsi);
 for ii = 1:clebsch.Npsi
-    psi00001(:, :, ii) = sin(ii * (clebsch.px + clebsch.py)) + 1i * cos(ii * (clebsch.px + clebsch.py));
+    real_part = sin(rand(size(clebsch.px)));
+    imag_part = cos(rand(size(clebsch.py)));
+    psi00001(:, :, ii) = real_part + 1i * imag_part;  % 随机复数矩阵
+    % psi00001(:, :, ii) = sin(ii * (clebsch.px + clebsch.py)) + 1i * cos(ii * (clebsch.px + clebsch.py));
 end
 psi00001 = clebsch.Normalize(psi00001); % 归一化
 nstep = 5001;
@@ -108,17 +114,17 @@ end
 % 保存速度场数据 u_x 和 u_y 到 MAT 文件
 ux = vx00001;
 uy = vy00001;
-save([data_dir 'velocity_field.mat'], 'ux', 'uy');
+save([data_dir 'velocity_field_deltwing.mat'], 'ux', 'uy');
 
 % 保存波函数 psi_1 和 psi_2 到 MAT 文件
 psi1 = real(psi00001(:, :, 1)) + 1i * imag(psi00001(:, :, 1));
 psi2 = real(psi00001(:, :, 2)) + 1i * imag(psi00001(:, :, 2));
-save([data_dir 'wave_function.mat'], 'psi1', 'psi2');
+save([data_dir 'wave_function_deltwing.mat'], 'psi1', 'psi2');
 
 % 计算并保存误差场 v_x 和 v_y 到 MAT 文件
 vx_error = vx00001 - vx_pre00001;
 vy_error = vy00001 - vy_pre00001;
-save([data_dir 'error_field.mat'], 'vx_error', 'vy_error');
+save([data_dir 'error_field_deltwing.mat'], 'vx_error', 'vy_error');
 
 % 输出文件保存完成信息
 disp(['数据已成功保存为MAT格式到文件夹: ' data_dir]);
@@ -129,4 +135,12 @@ psi1_imag_part_00001 = imag(psi1);  % 虚部
 psi2_real_part_00001 = real(psi2);  % 实部
 psi2_imag_part_00001 = imag(psi2);  % 虚部
 
-save('data00001.mat','vx00001', 'vx_pre00001','vy00001','vy_pre00001','psi00001','psi1_real_part_00001','psi1_imag_part_00001','psi2_real_part_00001',"psi2_imag_part_00001")
+save('data00001_deltwing.mat','vx00001', 'vx_pre00001','vy00001','vy_pre00001','psi00001','psi1_real_part_00001','psi1_imag_part_00001','psi2_real_part_00001',"psi2_imag_part_00001")
+
+
+
+figure 
+imagesc(vx_pre00001)
+
+figure 
+imagesc(vx00001)

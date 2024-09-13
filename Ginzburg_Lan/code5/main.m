@@ -1,13 +1,21 @@
 clear
 clc
+%%
+load("uu_reshaped.mat");
+load("vv_reshaped.mat");
+load("ww_reshaped.mat");
 %% PARAMETERS
 tic;  % 开始计时
 lx = 2*pi;
 ly = 2*pi;
 lz = 2*pi;
-nx = 64;
-ny = nx;
-nz = nx;
+% nx = 64;
+% ny = nx;
+% nz = nx;
+
+nx = 128;
+ny = 41;
+nz = 41;
 vol_size = {lx,ly,lz};   % box size
 vol_res = {nx,ny,nz}; % volume resolution
 hbar = 0.1;            % Planck constant
